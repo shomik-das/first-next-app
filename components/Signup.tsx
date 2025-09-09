@@ -1,10 +1,12 @@
 "use client"
-import { useState } from "react";
+import { use, useState } from "react";
+import { useRouter } from "next/navigation";
 
 const Signup = ()=> {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [userName, setUserName] = useState("");
+    const router = useRouter();
     
     const  handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         try{
@@ -12,7 +14,7 @@ const Signup = ()=> {
             setEmail("");
             setPassword("");
             setUserName("");
-            const response = await fetch("http://localhost:3000/api/user", {
+            const response = await fetch("http://localhost:3000/api/signup", {
                 method: "POST",
                 headers: { 
                     "Content-Type": "application/json"
@@ -20,7 +22,9 @@ const Signup = ()=> {
                 body: JSON.stringify({ email, password, userName })
             });
             const data = await response.json();
-            console.log(data);
+            if(data.success){
+                router.push("/"); 
+            }
         }catch(error){
             console.log(error);
         }

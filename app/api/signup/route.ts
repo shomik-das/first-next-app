@@ -1,6 +1,13 @@
 import { PrismaClient } from '../../generated/prisma'
 const prisma = new PrismaClient();
 
+
+type ApiResponse = {
+    success: boolean;
+    message: string; 
+    error?: string;
+}
+
 export function GET() {
     return Response.json([{
         user: "shomik@gmail.com",
@@ -8,7 +15,7 @@ export function GET() {
     }]);
 }
 
-export async function POST(request: Request) {
+export async function POST(request: Request): Promise<Response> {
     try{
         const body = await request.json();
         if(!body.email || !body.password){
@@ -25,16 +32,18 @@ export async function POST(request: Request) {
                 password: body.password,
             }
         })
-        return Response.json({
+        const res: ApiResponse = {
             success: true,
-            message: "user created successfully",
-        })
+            message: "User created successfully",
+        }
+        return Response.json(res);
     }
     catch(error: any){
-        return Response.json({
+        const res: ApiResponse = {
             success: false,
-            error: error.message,
             message: "something went wrong",
-        });
+            error: error.message,
+        }
+        return Response.json(res);
     }
 }

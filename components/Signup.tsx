@@ -6,9 +6,24 @@ const Signup = ()=> {
     const [password, setPassword] = useState("");
     const [userName, setUserName] = useState("");
     
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        console.log({ email, password });
+    const  handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        try{
+            e.preventDefault();
+            setEmail("");
+            setPassword("");
+            setUserName("");
+            const response = await fetch("http://localhost:3000/api/user", {
+                method: "POST",
+                headers: { 
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({ email, password, userName })
+            });
+            const data = await response.json();
+            console.log(data);
+        }catch(error){
+            console.log(error);
+        }
     };
     
     return (
